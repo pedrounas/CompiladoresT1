@@ -68,6 +68,15 @@ Cmd* ast_ifthenelse(Expr* cond, Cmd* comando){
   return node;
 }
 
+var* ast_ldecl_var(char* letra){
+  var* node=(var*) malloc (sizeof(var));
+  node->letra=strdup(letra);
+  return node;
+}
 
-
-// IF(1) a if(1) b else c
+var* ast_ldecl_decl(char* letra, Expr* valor){
+ var* node=(var *) malloc (sizeof(var));
+ node->letra=strup(letra);
+ node->valor=valor;
+ return node;
+}

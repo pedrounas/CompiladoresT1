@@ -71,6 +71,21 @@ struct
   struct lcmd* next;
 } lcmd ;
 
+struct {
+  char* letra;
+} var;
+
+struct {
+ char* letra;
+ struct _Expr* valor;
+} ldecl;
+
+struct { //?
+ char* letra;
+ struct var* next;
+} lvar;
+
+
 typedef struct _Expr Expr; // Convenience typedef
 typedef struct _BoolExpr BoolExpr;
 typedef struct _Cmd Cmd;
@@ -84,5 +99,7 @@ Cmd* ast_attrib (char var, Expr* expr);
 Cmd* ast_ciclos (Expr* cond, Cmd* comando);
 Cmd* ast_if(Expr* cond, Cmd* comando);
 Cmd* ast_ifthenelse(Expr* cond, Cmd* comando);
+var* ast_ldecl_var(char* letra);
+var* ast_ldecl_decl(char* letra, Expr* valor);
 
 #endif

@@ -67,8 +67,8 @@ Expr* root; // MUDAR PARA LISTA DE COMANDOS !!!!!!
 }
 
 %%
-//program: INTEIRO MAIN PESQ PDIR CHESQ lcmd CHDIR { root = $6; }
-program: expr { root = $1; }
+program: INTEIRO MAIN PESQ PDIR CHESQ lcmd CHDIR { root = $6; }
+//program: expr { root = $1; }
 expr:
 INT {
 $$ = ast_integer($1);
@@ -131,8 +131,15 @@ $$ = ast_operation(GREATEREQ,$1,$3);
 
 lcmd:
 cmd PV{
-
+/////?
 }
+;
+|
+cmd PV lcmd {
+////////////?
+}
+;
+
 
 cmd:
 E_IF{
@@ -212,7 +219,41 @@ $$=ast_decl($2);
 }
 ;
 
-%%
+cond:
+expr{
+//////////???
+}
+;
+|
+expr EQUAL expr {
+$$= ast_operation(EQUAL, $1,$3);
+}
+;
+|
+expr DIFF expr {
+$$ = ast_operation(DIFF, $1, $3);
+}
+;
+|
+expr LESS expr {
+$$ = ast_operation(LESS, $1, $3);
+}
+;
+|
+expr GREATER expr {
+$$= ast_operation(GREATER, $1, $3);
+}
+;
+|
+expr LESSEQ expr {
+$$= ast_operation(LESSEQ, $1, $3);
+}
+;
+|
+expr GREATEREQ expr {
+$$= ast_operation(GREATEREQ, $1, $3);
+}
+;
 
 void yyerror(const char* err) {
 printf("Line %d: %s - '%s'\n", yyline, err, yytext  );
