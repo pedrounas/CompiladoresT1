@@ -101,5 +101,6 @@ Cmd* ast_if(Expr* cond, Cmd* comando);
 Cmd* ast_ifthenelse(Expr* cond, Cmd* comando);
 var* ast_ldecl_var(char* letra);
 var* ast_ldecl_decl(char* letra, Expr* valor);
+lvar* ast_lvar(char* letra, lvar* next);
 
 #endif

@@ -80,3 +80,10 @@ var* ast_ldecl_decl(char* letra, Expr* valor){
  node->valor=valor;
  return node;
 }
+
+lvar* ast_lvar(char* letra, lvar* next){
+ lvar* node =(lvar *) malloc (sizeof(lvar));
+ node->letra=letra;
+ node->next=next;
+ return node;
+}

@@ -255,6 +255,40 @@ $$= ast_operation(GREATEREQ, $1, $3);
 }
 ;
 
+lvar:
+VAR {
+$$=$1///?
+}
+;
+|
+VAR VIRGULA lvar{
+$$=ast_lvar($1,$3);
+}
+;
+
+ldecl:
+VAR {
+$$=$1;///?
+}
+;
+VAR IGUAL expr {
+$$= ast_ldecl_var($1,$3);
+}
+;
+|
+VAR VIRGULA ldecl {
+$$=ast_ldecl_decl($1,$3);
+}
+;
+|
+VAR IGUAL expr VIRGULA ldecl {
+$$= ast_ldecl_decl($3,$5);
+}
+;
+
+
+
+
 void yyerror(const char* err) {
 printf("Line %d: %s - '%s'\n", yyline, err, yytext  );
 }
