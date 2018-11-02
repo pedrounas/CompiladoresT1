@@ -63,7 +63,8 @@ extern int yyline;
 extern char* yytext;
 extern FILE* yyin;
 extern void yyerror(const char* msg);
-Expr* root; // MUDAR PARA LISTA DE COMANDOS !!!!!!
+//Expr* root;
+lcmd* root; 
 }
 
 %%
