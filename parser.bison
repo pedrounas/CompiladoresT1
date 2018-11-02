@@ -133,9 +133,46 @@ lcmd:
 cmd PV{
 
 }
+cmd:
+E_IF{
+$$=$1;
+}
+;
+|
+E_IF_ELSE{
+$$=$1;
+}
+;
+|
+E_CICLO{
+$$=$1;
+}
+;
+|
+E_ATTR{
+$$=$1;
+}
+;
+|
+E_PRINT{
+$$=$1;
+}
+;
+|
+E_SCAN {
+$$=$1;
+}
+;
+|
+E_DECL {
+$$=$1;
+}
+;
 
-
-
+E_IF:
+SE PESQ cond PDIR CHESQ lcmd CHDIR{
+$$=ast_if($3,$6);
+}
 
 
 %%
