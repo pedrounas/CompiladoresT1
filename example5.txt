@@ -1,1 +1,2 @@
-1>2=10
+# Um exemplo de boolean
+1>2>=10

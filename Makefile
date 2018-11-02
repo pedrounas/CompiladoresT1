@@ -1,6 +1,6 @@
 
 OBJS=scanner.o parser.o ast.o printAbsTree.o
-INTERM=scanner.c parser.c parser.h 
+INTERM=scanner.c parser.c parser.h
 PROGRAM=./printAbsTree
 CFLAGS=-g
 

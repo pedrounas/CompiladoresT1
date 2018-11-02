@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 35 "parser.bison" /* yacc.c:1909  */
+#line 37 "parser.bison" /* yacc.c:1909  */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,8 +70,8 @@ Expr* root;
     DIFF = 265,
     LESS = 266,
     GREATER = 267,
-    LESSOREQ = 268,
-    GREATEROREQ = 269
+    LESSEQ = 268,
+    GREATEREQ = 269
   };
 #endif
 
@@ -82,10 +82,11 @@ union YYSTYPE
 {
 #line 25 "parser.bison" /* yacc.c:1909  */
 
-  int intValue;
-  Expr* exprValue;
+int intValue;
+Expr* exprValue;
+BoolExpr* boolValue;
 
-#line 89 "parser.h" /* yacc.c:1909  */
+#line 90 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
