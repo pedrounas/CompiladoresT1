@@ -133,6 +133,7 @@ lcmd:
 cmd PV{
 
 }
+
 cmd:
 E_IF{
 $$=$1;
@@ -173,7 +174,43 @@ E_IF:
 SE PESQ cond PDIR CHESQ lcmd CHDIR{
 $$=ast_if($3,$6);
 }
+;
 
+E_IF_ELSE:
+SE PESQ cond PDIR CHESQ lcmd CHDIR{
+$$=ast_ifthenelse($3,$6);
+}
+;
+
+E_CICLO:
+CICLO PESQ cond PDIR CHESQ lcmd CHDIR{
+$$=ast_ciclos($3,$6);
+}
+;
+
+E_ATTR:
+VAR IGUAL INT{
+$$=ast_attrib();
+}
+;
+
+E_PRINT:
+PRINT PESQ STR VIRGULA lvar PDIR{
+$$=ast_print($5);
+}
+;
+
+E_SCAN:
+SCAN PESQ STR VIRGULA lvar PDIR{
+$$=ast_scan($5);
+}
+;
+
+E_DECL:
+INTEIRO ldecl{
+$$=ast_decl($2);
+}
+;
 
 %%
 
