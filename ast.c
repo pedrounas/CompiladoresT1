@@ -3,15 +3,17 @@
 #include <stdlib.h> // for malloc
 #include "ast.h" // AST header
 
-Expr* ast_integer(int v) {
-  Expr* node = (Expr*) malloc(sizeof(Expr));
+Expr ast_integer(int v) 
+{
+  Expr node = (Expr) malloc(sizeof(struct _Expr));
   node->kind = E_INTEGER;
   node->attr.value = v;
   return node;
 }
 
-Expr* ast_operation(int operator, Expr* left, Expr* right) {
-  Expr* node = (Expr*) malloc(sizeof(Expr));
+Expr ast_operation (int operator, Expr left, Expr right) 
+{
+  Expr node = (Expr) malloc(sizeof(struct _Expr));
   node->kind = E_OPERATION;
   node->attr.op.operator = operator;
   node->attr.op.left = left;
@@ -19,71 +21,100 @@ Expr* ast_operation(int operator, Expr* left, Expr* right) {
   return node;
 }
 
-Expr* ast_boolean(int v){
-  Expr* node=(Expr*) malloc(sizeof(Expr));
-  node->kind= E_BOOLEAN;
-  node->attr.value = v;
-  return node;
-}
-Expr* ast_booleanrel(Expr* left, int operator, Expr* right){
-  Expr* node=(Expr*) malloc(sizeof(Expr));
-  node->kind= E_BOOLEAN;
-  node->attr.op.operator= operator;
-  node->attr.op.left=left;
-  node->attr.op.right=right;
+Expr ast_boolean (int operator, Expr left, Expr right) 
+{
+  Expr node = (Expr) malloc(sizeof(struct _Expr));
+  node->kind = E_OPBOOLEAN;
+  node->attr.op_bl.operator = operator;
+  node->attr.op_bl.left = left;
+  node->attr.op_bl.right = right;
   return node;
 }
 
-Cmd* ast_attrib(char var, Expr* expr){
-  Cmd* node=(Cmd*) malloc (sizeof(Cmd));
-  node->kind=E_ATTR;
-  node->attr.atributo.var=var;
-  node->attr.atributo.expr=expr;
-
-  return node;
-
-}
-Cmd* ast_ciclos(Expr* cond, Cmd* comando){
-  Cmd* node=(Cmd*) malloc (sizeof(Cmd));
-  node->kind=E_CICLO;
-  node->attr.ciclo.cond=cond;
-  node->attr.ciclo.comando=comando;
-
-  return node;
-}
-Cmd* ast_if(Expr* cond, Cmd* comando){
-  Cmd* node=(Cmd*) malloc (sizeof(Cmd));
-  node->kind=E_IF;
-  node->attr.se.cond=cond;
-  node->attr.se.comando=comando;
-
-  return node;
-}
-Cmd* ast_ifthenelse(Expr* cond, Cmd* comando){
-  Cmd* node=(Cmd*) malloc (sizeof(Cmd));
-  node->kind=E_IF_ELSE;
-  node->attr.entao.cond=cond;
-  node->attr.entao.comando=comando;
-
+Expr ast_var(char *v)
+{
+	Expr node = (Expr) malloc(sizeof(struct _Expr));
+  node->kind = E_VARIABLE;
+  node->attr.var = v;
   return node;
 }
 
-var* ast_ldecl_var(char* letra){
-  var* node=(var*) malloc (sizeof(var));
-  node->letra=strdup(letra);
-  return node;
+cmdList mklist(cmd head, cmdList tail)
+{
+	cmdList node = (cmdList) malloc(sizeof(struct _cmdList));
+  node->head = head;
+  node->tail = tail;
+  return node;	
 }
 
-var* ast_ldecl_decl(char* letra, Expr* valor){
- var* node=(var *) malloc (sizeof(var));
- node->letra=strup(letra);
- node->valor=valor;
- return node;
+elseifList mkElseIflist(elseif head, elseifList tail)
+{
+  elseifList node = (elseifList) malloc(sizeof(struct _elseifList));
+  node->head = head;
+  node->tail = tail;
+  return node;  
 }
 
-lvar* ast_lvar(char* letra, lvar* next){
- lvar* node =(lvar *) malloc (sizeof(lvar));
- node->letra=letra;
- node->next=next;
- return node;
+cmd mkAtrib(char *var, Expr e)
+{
+	cmd node = (cmd) malloc(sizeof(struct _cmd));
+  node->kind = E_ATRIB;
+  node->attr.atrib.var = var;
+  node->attr.atrib.exp = e;
+  return node;		
+}
+
+cmd mkIf(Expr ifCond, cmdList ifBody, elseifList ElseIFlist, cmdList elsee)
+{
+  cmd node = (cmd) malloc(sizeof(struct _cmd));
+  node->kind = E_IF;
+  node->attr.iff.cond = ifCond;
+  node->attr.iff.body = ifBody;
+
+  node->attr.iff.elseiff = ElseIFlist;
+  node->attr.iff.elsee = elsee;
+  return node;     
+}
+
+elseif mkElseIf(Expr cond, cmdList body)
+{
+  elseif node = (elseif) malloc(sizeof(struct _elseif));
+  node->cond = cond;
+  node->body = body;
+  return node;     
+}
+
+cmd mkWhile(Expr cond, cmdList body)
+{
+  cmd node = (cmd) malloc(sizeof(struct _cmd));
+  node->kind = E_WHILE;
+  node->attr.whilee.cond = cond;
+  node->attr.whilee.body = body;
+  return node;     
+}
+
+cmd mkFor(cmd decl, Expr cond, cmdList body)
+{
+  cmd node = (cmd) malloc(sizeof(struct _cmd));
+  node->kind = E_FOR;
+  node->attr.forr.decl = decl; 
+  node->attr.forr.cond = cond;
+  node->attr.forr.body = body;
+  return node;     
+}
+
+cmd mkOutput(Expr e)
+{
+  cmd node = (cmd) malloc(sizeof(struct _cmd));
+  node->kind = E_OUTPUT;
+  node->attr.output = e; 
+  return node;      
+}
+
+cmd mkInput(char *var)
+{
+  cmd node = (cmd) malloc(sizeof(struct _cmd));
+  node->kind = E_INPUT;
+  node->attr.input = var; 
+  return node;       
 }

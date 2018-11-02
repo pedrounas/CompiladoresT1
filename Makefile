@@ -1,8 +1,8 @@
 
-OBJS=scanner.o parser.o ast.o printAbsTree.o
+OBJS=scanner.o parser.o ast.o interpreter.o
 INTERM=scanner.c parser.c parser.h
-PROGRAM=./printAbsTree
-CFLAGS=-g
+PROGRAM=./interpreter
+CFLAGS=-g 
 
 all: $(PROGRAM)
 
@@ -18,7 +18,15 @@ clean:
 	rm -f $(PROGRAM) $(OBJS) $(INTERM)
 
 test: $(PROGRAM)
-	$(PROGRAM) example1.txt
-	$(PROGRAM) example2.txt
-	$(PROGRAM) example3.txt
-	$(PROGRAM) example4.txt
+	$(PROGRAM) inputExample.m
+	$(PROGRAM) ifExample4.m
+	$(PROGRAM) ifExample3.m
+	$(PROGRAM) ifExample2.m
+	$(PROGRAM) ifExample.m
+	$(PROGRAM) fibonacci.m
+	$(PROGRAM) forExample.m
+	$(PROGRAM) forExample2.m
+	$(PROGRAM) whileExample2.m
+	$(PROGRAM) whileExample.m
+	$(PROGRAM) arithmeticOperators.m
+	$(PROGRAM) arithmeticOperators2.m
