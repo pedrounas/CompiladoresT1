@@ -1,6 +1,6 @@
 
 // Tokens
-%token 
+%token
   INT  		// 1,2,3 ....
   PLUS 		// +
   MINUS		// -
@@ -8,6 +8,7 @@
   DIV		  // /
   MOD		  // %
   BRACKETS// ( Expr )
+  PARANT// ( Expr )
   F			  // ;
   COLON		// :
   VAR 		// x, i ....
@@ -21,13 +22,15 @@
   IFF		  // if expr cmd_list
   ELSEIF 	// elseif expr cmd_list
   ELSEE		// else cmd_list
-  END		
+  END
   WHILEE	// while expr cmd_list
   FORR		// for cmd:expr cmd_list
   TRUE		// 1
   FALSE		// 0
   OPENb		// (
   CLOSEb	// )
+  OPENp   // {
+  CLOSEp  // }
   INPUT   // input
   OUTPUT  // disp
   CO
@@ -40,12 +43,12 @@
 
 
 // Types/values in association to grammar symbols.
-%union 
+%union
 {
   int intValue;
-  Expr exprValue;                
+  Expr exprValue;
   char *varval;
-  cmdList cmd_l; 
+  cmdList cmd_l;
   elseifList elseif_l;
   elseif elseif_;
   cmd cmd_;
@@ -67,7 +70,7 @@
 
 // Use "%code requires" to make declarations go
 // into both parser.c and parser.h
-%code requires 
+%code requires
 {
   #include <stdio.h>
   #include <stdlib.h>
@@ -82,16 +85,16 @@
 }
 
 %%
-program: cmd_list { root = $1; }                         
+program: cmd_list { root = $1; }
 
 
-cmd_list: 
+cmd_list:
 
   	  cmd cmd_list     { $$ = mklist($1,$2); }
 
   	| cmd           { $$ = mklist($1,NULL); }
 
-cmd_elseif_list: 
+cmd_elseif_list:
 
       cmd_elseif cmd_elseif_list     { $$ = mkElseIflist($1,$2); }
 
@@ -103,9 +106,9 @@ cmd_elseif:
 
 cmd:
 
-	  VAR ATRIB expr F                                              { $$ = mkAtrib($1,$3); } 
+	  VAR ATRIB expr F                                              { $$ = mkAtrib($1,$3); }
 
-  | VAR ATRIB exprB F                                              { $$ = mkAtrib($1,$3); } 
+  | VAR ATRIB exprB F                                              { $$ = mkAtrib($1,$3); }
 
   | IFF exprB cmd_list END                                         { $$ = mkIf($2, $3, NULL, NULL); }
 
@@ -124,25 +127,27 @@ cmd:
   | VAR ATRIB INPUT OPENb CLOSEb F                                 { $$ = mkInput($1); }
 
 for_atrib:
-  
+
   VAR ATRIB expr     { $$ = mkAtrib($1,$3); }
 
 expr:
-	
-    INT                { $$ = ast_integer($1); } 
+
+    INT                { $$ = ast_integer($1); }
 
   | OPENb expr CLOSEb  { $$ = ast_operation(BRACKETS, $2, NULL); }
 
-	| TRUE					     { $$ = ast_integer(1); }  
+  | OPENp expr CLOSEp  { $$ = ast_operation(PARANT, $2, NULL); }
 
-	| FALSE				  	   { $$ = ast_integer(0); }  
+	| TRUE					     { $$ = ast_integer(1); }
+
+	| FALSE				  	   { $$ = ast_integer(0); }
 
  	| VAR 					     { $$ = ast_var($1); }
 
  	| expr PLUS expr     { $$ = ast_operation(PLUS, $1, $3); }
 
- 	| expr MINUS expr    { $$ = ast_operation(MINUS, $1, $3); } 
-  
+ 	| expr MINUS expr    { $$ = ast_operation(MINUS, $1, $3); }
+
  	| expr MULT expr     { $$ = ast_operation(MULT, $1, $3); }
 
  	| expr DIV expr 	   { $$ = ast_operation(DIV, $1, $3); }
@@ -166,10 +171,9 @@ exprB:
 
 %%
 
-void yyerror(const char* err) 
+void yyerror(const char* err)
 {
     printf("Line %d: %s - '%s'\n", yyline, err, yytext);
 }
 
 //evallist function
-

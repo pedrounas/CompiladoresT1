@@ -43,12 +43,14 @@ int yyline = 1;
 ":"		 { return COLON; }
 "(" 	 { return OPENb; }
 ")" 	 { return CLOSEb; }
+"{"    { return OPENp; }
+"}"    { return CLOSEp; }
 "disp" 	 { return OUTPUT; }
 "input"	 { return INPUT; }
 
-\-?[0-9]+ { 
+\-?[0-9]+ {
    yylval.intValue = atoi(yytext);
-   return INT; 
+   return INT;
 }
 
 \-?[a-z,A-Z]+ {
@@ -56,7 +58,5 @@ int yyline = 1;
 	return VAR;
 }
 
-
 .  { yyerror("unexpected character"); }
 %%
-

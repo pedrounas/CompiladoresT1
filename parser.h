@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 71 "parser.bison" /* yacc.c:1909  */
+#line 74 "parser.bison" /* yacc.c:1909  */
 
   #include <stdio.h>
   #include <stdlib.h>
@@ -67,29 +67,32 @@ extern int yydebug;
     DIV = 262,
     MOD = 263,
     BRACKETS = 264,
-    F = 265,
-    COLON = 266,
-    VAR = 267,
-    ATRIB = 268,
-    EQUAL = 269,
-    NEQUAL = 270,
-    MORE = 271,
-    LESS = 272,
-    MOREeq = 273,
-    LESSeq = 274,
-    IFF = 275,
-    ELSEIF = 276,
-    ELSEE = 277,
-    END = 278,
-    WHILEE = 279,
-    FORR = 280,
-    TRUE = 281,
-    FALSE = 282,
-    OPENb = 283,
-    CLOSEb = 284,
-    INPUT = 285,
-    OUTPUT = 286,
-    CO = 287
+    PARANT = 265,
+    F = 266,
+    COLON = 267,
+    VAR = 268,
+    ATRIB = 269,
+    EQUAL = 270,
+    NEQUAL = 271,
+    MORE = 272,
+    LESS = 273,
+    MOREeq = 274,
+    LESSeq = 275,
+    IFF = 276,
+    ELSEIF = 277,
+    ELSEE = 278,
+    END = 279,
+    WHILEE = 280,
+    FORR = 281,
+    TRUE = 282,
+    FALSE = 283,
+    OPENb = 284,
+    CLOSEb = 285,
+    OPENp = 286,
+    CLOSEp = 287,
+    INPUT = 288,
+    OUTPUT = 289,
+    CO = 290
   };
 #endif
 
@@ -98,17 +101,17 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 44 "parser.bison" /* yacc.c:1909  */
+#line 47 "parser.bison" /* yacc.c:1909  */
 
   int intValue;
-  Expr exprValue;                
+  Expr exprValue;
   char *varval;
-  cmdList cmd_l; 
+  cmdList cmd_l;
   elseifList elseif_l;
   elseif elseif_;
   cmd cmd_;
 
-#line 112 "parser.h" /* yacc.c:1909  */
+#line 115 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

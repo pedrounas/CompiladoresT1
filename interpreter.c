@@ -12,14 +12,14 @@ void putTabs(int tab)
   }
 }
 
-void printExpr(Expr expr) 
+void printExpr(Expr expr)
 {
-  if (expr->kind == E_INTEGER) 
+  if (expr->kind == E_INTEGER)
   {
-    printf(" %d ", expr->attr.value); 
-  } 
+    printf(" %d ", expr->attr.value);
+  }
 
-  else if (expr->kind == E_OPERATION) 
+  else if (expr->kind == E_OPERATION)
   {
     if(expr->attr.op.operator == BRACKETS)
     {
@@ -27,29 +27,37 @@ void printExpr(Expr expr)
       printExpr(expr->attr.op.left); // Lado direito está NULL (BISON)
       printf(") ");
     }
+
+    if(expr->attr.op.operator == PARANT)
+    {
+      printf(" {");
+      printExpr(expr->attr.op.left); // Lado direito está NULL (BISON)
+      printf("} ");
+    }
+
     else
     {
       printExpr(expr->attr.op.left);
-         
-      switch (expr->attr.op.operator) 
+
+      switch (expr->attr.op.operator)
       {
-        case PLUS: 
-          printf(" + ");  
+        case PLUS:
+          printf(" + ");
           break;
 
-        case MINUS: 
+        case MINUS:
           printf(" - ");
           break;
 
-        case DIV: 
+        case DIV:
           printf(" / ");
           break;
-        
-        case MULT: 
+
+        case MULT:
           printf(" * ");
           break;
-      
-        case MOD: 
+
+        case MOD:
           printf(" %% ");
           break;
       }
@@ -58,33 +66,33 @@ void printExpr(Expr expr)
     }
   }
 
-  else if (expr->kind == E_OPBOOLEAN) 
+  else if (expr->kind == E_OPBOOLEAN)
   {
     printExpr(expr->attr.op_bl.left);
-    
-    switch (expr->attr.op_bl.operator) 
+
+    switch (expr->attr.op_bl.operator)
     {
-      case EQUAL: 
+      case EQUAL:
         printf(" == ");
         break;
 
-      case NEQUAL: 
+      case NEQUAL:
         printf(" ~= ");
         break;
 
-      case MORE: 
+      case MORE:
         printf(" > ");
         break;
 
-      case LESS: 
+      case LESS:
         printf(" < ");
         break;
 
-      case MOREeq: 
+      case MOREeq:
         printf(" >= ");
         break;
 
-      case LESSeq: 
+      case LESSeq:
         printf(" <= ");
         break;
     }
@@ -92,38 +100,38 @@ void printExpr(Expr expr)
     printExpr(expr->attr.op_bl.right);
   }
 
-  else if (expr->kind == E_VARIABLE) 
+  else if (expr->kind == E_VARIABLE)
   {
     printf(" %s ", expr->attr.var);
   }
 }
 
-void printCmd(cmd command, int tab) 
+void printCmd(cmd command, int tab)
 {
   countCmd++;
-  
+
   putTabs(tab);
 
-  if (command->kind == E_ATRIB) 
+  if (command->kind == E_ATRIB)
   {
-    printf("%s =", command->attr.atrib.var); 
+    printf("%s =", command->attr.atrib.var);
     printExpr(command->attr.atrib.exp);
     printf("\n");
-  } 
+  }
 
   else if(command->kind == E_IF)
   {
     printf("IF ");
-    printExpr(command->attr.iff.cond); 
+    printExpr(command->attr.iff.cond);
 
     printf("\n");
     putTabs(tab);
     printf("{");
 
-    cmdList command2 = command->attr.iff.body; 
+    cmdList command2 = command->attr.iff.body;
 
     while(command2!=NULL)
-    { 
+    {
       printf("\n");
       printCmd(command2->head, tab+2);
       command2 = command2->tail;
@@ -132,26 +140,26 @@ void printCmd(cmd command, int tab)
     putTabs(tab);
     printf("}\n");
 
-    elseifList list = command->attr.iff.elseiff; 
+    elseifList list = command->attr.iff.elseiff;
 
     while(list!=NULL)
-    { 
+    {
       printf("\n");
 
       putTabs(tab);
       printf("ELSEIF ");
-      
+
       elseif command_elseif = list->head;
-     
+
       printExpr(command_elseif->cond);
 
       printf("\n");
       putTabs(tab);
       printf("{");
-      
-      command2 = command_elseif->body; 
+
+      command2 = command_elseif->body;
       while(command2 != NULL)
-      { 
+      {
         printf("\n");
         printCmd(command2->head, tab+2);
         command2 = command2->tail;
@@ -161,19 +169,19 @@ void printCmd(cmd command, int tab)
       putTabs(tab);
       printf("}\n");
     }
-    
+
     if(command->attr.iff.elsee != NULL)
     {
       putTabs(tab);
       printf("ELSE");
 
-      printf("\n"); 
+      printf("\n");
       putTabs(tab);
       printf("{");
-    
+
       command2 = command->attr.iff.elsee;
       while(command2!=NULL)
-      { 
+      {
         printf("\n");
         printCmd(command2->head, tab+2);
         command2 = command2->tail;
@@ -189,16 +197,16 @@ void printCmd(cmd command, int tab)
   {
     printf("WHILE ");
 
-    printExpr(command->attr.whilee.cond); 
-    
+    printExpr(command->attr.whilee.cond);
+
     printf("\n");
     putTabs(tab);
     printf("{");
 
-    cmdList list = command->attr.whilee.body; 
-    
+    cmdList list = command->attr.whilee.body;
+
     while(list!=NULL)
-    { 
+    {
       printf("\n");
       printCmd(list->head, tab+2);
       list = list->tail;
@@ -213,21 +221,21 @@ void printCmd(cmd command, int tab)
     printf("FOR ");
 
     cmd command2 =  command->attr.forr.decl;
-    printf("%s =", command2->attr.atrib.var); 
+    printf("%s =", command2->attr.atrib.var);
     printExpr(command2->attr.atrib.exp);
 
     printf(":");
 
-    printExpr(command->attr.forr.cond);   
-    
+    printExpr(command->attr.forr.cond);
+
     printf("\n");
     putTabs(tab);
     printf("{");
-    
-    cmdList list = command->attr.forr.body; 
-    
+
+    cmdList list = command->attr.forr.body;
+
     while(list!=NULL)
-    { 
+    {
       printf("\n");
       printCmd(list->head, tab+2);
       list = list->tail;
@@ -243,29 +251,29 @@ void printCmd(cmd command, int tab)
 
     printExpr(command->attr.output);
     printf("\n");
-  }  
+  }
 
   else if(command->kind == E_INPUT)
   {
     printf("INPUT %s", command->attr.input);
     printf("\n");
-  }  
+  }
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
   --argc; ++argv;
-  if (argc != 0) 
+  if (argc != 0)
   {
     yyin = fopen(*argv, "r");
-    if (!yyin) 
+    if (!yyin)
     {
       printf("'%s': could not open file\n", *argv);
       return 1;
     }
   } //  yyin = stdin
 
-  if (yyparse() == 0) 
+  if (yyparse() == 0)
   {
     while(root != NULL)
     {
