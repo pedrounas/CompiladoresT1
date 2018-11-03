@@ -87,41 +87,52 @@ default: yyerror("Unknown operator!");
 printBool(b->attr.op.right);
 }
 }*/
+int conta=0;
 void printCmd(Cmd* command){
+  conta++;
   if (command== 0) {
     yyerror("Null expression!!");
   }
   else if (command->kind == E_IF) {
-    printf("IF");
-    printCmd(command->attr.se.cond);
-    printCmd(command->attr.se.cmd);
+    printf("IF ");
+    printExpr(command->attr.se.cond);
+    //printCmd(command->attr.se.cmd);
+    printf("\n");
+    printf("{");
+    //fazer lista de comandos
   }
   else if (command->kind == E_IF_ELSE) {
     printf("IF");
     printCmd(command->attr.entao.cond);
     printCmd(command->attr.entao.cmd);
-      printf("ELSE");
-      printCmd(command->attr.entao.cmd);
+    printf("\n");
+    printf("ELSE");
+    printCmd(command->attr.entao.cmd);
+    //fazer lista de comandos
 
   }
   else if(command->kind== E_CICLO){
-    printf("WHILE");
-    printCmd(command->attr.ciclo.cond);
+    printf("WHILE ");
+    printExpr(command->attr.ciclo.cond);
+    printf("\n");
+    printf("{");
+
+    //fazer lista de comandos
   }
 
   else if(command->kind == E_ATTR){
-    printf("%c", command->attr.atributo.var);
-    printCmd(command->attr.atributo.expr);
+    printf("%s =", command->attr.atributo.var);
+    printExpr(command->attr.atributo.expr);
+    printf("\n");
   }
 
-  switch (command->attr.ciclo.cond) {
-    case LESSEQ:
-    printf("<=");
-    break;
-    default: yyerror("Unknown operator!");
+  else if(command->kind == E_SCAN){
+    printf("scanf ", command->attr.scan.var);
   }
-  printCmd(command->attr.ciclo.comando);
-}
+  else if(command->kind ==E_PRINT){
+    printf("printf ", command->attr.print.letra);
+  }
+
 }
 
 
@@ -134,9 +145,15 @@ int main(int argc, char** argv) {
       return 1;
     }
   }
-  if(yyparse()==0)
-  printExpr(root);
-  //printBool(root);
+  if(yyparse()==0){
+    //printExpr(root);
+    while (root!=NULL){
+      printCmd(root->comando, 0);
+      printf("\n");
+      root= root->next;
+    }
+  }
+
 
   return 0;
 }
