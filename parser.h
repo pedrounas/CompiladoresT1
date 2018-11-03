@@ -40,18 +40,18 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 37 "parser.bison" /* yacc.c:1909  */
+#line 71 "parser.bison" /* yacc.c:1909  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "ast.h"
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include "ast.h"
 
-extern int yylex();
-extern int yyline;
-extern char* yytext;
-extern FILE* yyin;
-extern void yyerror(const char* msg);
-Expr* root;
+  extern int yylex();
+  extern int yyline;
+  extern char* yytext;
+  extern FILE* yyin;
+  extern void yyerror(const char* msg);
+  cmdList root;
 
 #line 57 "parser.h" /* yacc.c:1909  */
 
@@ -66,12 +66,30 @@ Expr* root;
     MULT = 261,
     DIV = 262,
     MOD = 263,
-    EQUAL = 264,
-    DIFF = 265,
-    LESS = 266,
-    GREATER = 267,
-    LESSEQ = 268,
-    GREATEREQ = 269
+    BRACKETS = 264,
+    F = 265,
+    COLON = 266,
+    VAR = 267,
+    ATRIB = 268,
+    EQUAL = 269,
+    NEQUAL = 270,
+    MORE = 271,
+    LESS = 272,
+    MOREeq = 273,
+    LESSeq = 274,
+    IFF = 275,
+    ELSEIF = 276,
+    ELSEE = 277,
+    END = 278,
+    WHILEE = 279,
+    FORR = 280,
+    TRUE = 281,
+    FALSE = 282,
+    OPENb = 283,
+    CLOSEb = 284,
+    INPUT = 285,
+    OUTPUT = 286,
+    CO = 287
   };
 #endif
 
@@ -80,13 +98,17 @@ Expr* root;
 
 union YYSTYPE
 {
-#line 25 "parser.bison" /* yacc.c:1909  */
+#line 44 "parser.bison" /* yacc.c:1909  */
 
-int intValue;
-Expr* exprValue;
-BoolExpr* boolValue;
+  int intValue;
+  Expr exprValue;                
+  char *varval;
+  cmdList cmd_l; 
+  elseifList elseif_l;
+  elseif elseif_;
+  cmd cmd_;
 
-#line 90 "parser.h" /* yacc.c:1909  */
+#line 112 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

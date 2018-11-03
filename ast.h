@@ -4,103 +4,122 @@
 #define __ast_h__
 
 // AST for expressions
-struct _Expr {
-  enum {
-    E_INTEGER,
-    E_OPERATION
-  } kind;
-  union {
-    int value; // for integer values
-    struct {
-      int operator; // PLUS, MINUS, etc
-      struct _Expr* left;
-      struct _Expr* right;
-    } op; // for binary expressions
-  } attr;
-};
-
-struct var {
-  char* nome;
-}
-
-struct _BoolExpr{
-  enum {
-    E_BOPERATION,
-    E_BOOLEAN
-  } kind;
-  union {
-    int value; // for integer values
-    struct {
-      int operator; // PLUS, MINUS, etc
-      struct _Expr* left;
-      struct _Expr* right;
-    } op; // for binary expressions
-  } attr;
-};
-
-struct _Cmd{
-  enum {
-    E_IF; //expr e uma lista de comando
-    E_IF_ELSE;
-    E_CICLO;
-    E_ATTR;//1 var
-  } kind;
-  union {
-    struct {
-      char var;
-      struct _Expr* expr;
-    } atributo; // para atribuições
-    struct {
-      struct _Expr* cond;
-      struct _Cmd* comando;
-    } ciclo; //para o while
-   struct {
-     struct _Expr* cond;
-     struct _Cmd* comando; //por lista de comandos
-   } se; //if
-   struct {
-     struct _Expr* cond;
-     struct _Cmd* comando;
-   } entao; //if than else
-  } attr;
-};
-
-struct
+typedef struct _Expr 
 {
-  struct _Cmd* comando;
-  struct lcmd* next;
-} lcmd ;
+  enum 
+  { 
+    E_INTEGER,
+    E_VARIABLE,
+    E_OPERATION,
+    E_OPBOOLEAN,
+  } kind;
 
-struct {
-  char* letra;
-} var;
+  union 
+  {
+    int value; // E_INTEGER
+    
+    char *var; // E_VARIABLE
 
-struct {
- char* letra;
- struct _Expr* valor;
-} ldecl;
+    struct // E_OPERATION
+    { 
+      int operator; // PLUS, MINUS, etc 
+      struct _Expr* left;
+      struct _Expr* right;
+    } op;
 
-struct { //?
- char* letra;
- struct var* next;
-} lvar;
+    struct // E_OPBOOLEAN 
+    { 
+      int operator; // MORE, LESS, etc 
+      struct _Expr* left;
+      struct _Expr* right;
+    } op_bl;
+  } attr;
+}* Expr;
 
 
-typedef struct _Expr Expr; // Convenience typedef
-typedef struct _BoolExpr BoolExpr;
-typedef struct _Cmd Cmd;
 
-// Constructor functions (see implementation in ast.c)
-Expr* ast_integer(int v);
-Expr* ast_operation(int operator, Expr* left, Expr* right);
-//BoolExpr* ast_boolean(int v);
-//BoolExpr* ast_booleanrel(Expr* left, int operator, Expr* right);
-Cmd* ast_attrib (char var, Expr* expr);
-Cmd* ast_ciclos (Expr* cond, Cmd* comando);
-Cmd* ast_if(Expr* cond, Cmd* comando);
-Cmd* ast_ifthenelse(Expr* cond, Cmd* comando);
-var* ast_ldecl_var(char* letra);
-var* ast_ldecl_decl(char* letra, Expr* valor);
-lvar* ast_lvar(char* letra, lvar* next);
+typedef struct _cmd
+{
+  enum
+  {
+    E_ATRIB,
+    E_IF,
+    E_WHILE,
+    E_FOR, 
+    E_OUTPUT,
+    E_INPUT
+
+  } kind;
+  
+  union
+  {
+    struct // E_ATRIB
+    {
+      char *var;
+      Expr exp;
+    } atrib;
+
+    struct // E_IF -> if elseif(LIST) else
+    {
+      Expr cond;
+      struct _cmdList* body;
+
+      struct _elseifList* elseiff;      
+
+      struct _cmdList* elsee;
+    } iff;
+
+    struct // E_WHILE
+    {
+      Expr cond;
+      struct _cmdList* body;
+    } whilee;
+
+    struct // E_FOR
+    {
+      struct _cmd* decl;
+      Expr cond;
+      struct _cmdList* body;
+    } forr;
+
+    Expr output; // E_OUTPUT
+
+    char *input; // E_INPUT
+  } attr;
+}* cmd;
+
+
+typedef struct _cmdList
+{
+  cmd head;
+  struct _cmdList *tail;
+}* cmdList;
+
+typedef struct _elseif
+{
+  Expr cond;
+  cmdList body;
+}* elseif;
+
+typedef struct _elseifList
+{
+  elseif head;
+  struct _elseifList *tail;
+}* elseifList;
+
+
+Expr ast_integer(int v);
+Expr ast_var(char *v);
+Expr ast_operation(int operator, Expr left, Expr right);
+Expr ast_boolean(int operator, Expr left, Expr right);
+cmdList mklist(cmd head, cmdList tail);
+elseifList mkElseIflist(elseif head, elseifList tail);
+cmd mkAtrib(char *var, Expr e);
+cmd mkIf(Expr ifCond, cmdList ifBody, elseifList ElseIFlist, cmdList elsee);
+elseif mkElseIf(Expr cond, cmdList body);
+cmd mkWhile(Expr cond, cmdList body);
+cmd mkFor(cmd decl, Expr cond, cmdList body);
+cmd mkOutput(Expr e);
+cmd mkInput(char *var);
 
 #endif
